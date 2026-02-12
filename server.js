@@ -3,12 +3,12 @@ const app = express();
 
 // Map subdomains to target URLs
 const targetMap = {
-	cmu: "http://lmis.cmu.gov.pk",  // Default domain without subdomain
-	ajk: "http://ajk.lmis.cmu.gov.pk",
-	ba: "http://ba.lmis.cmu.gov.pk",
-	gb: "http://gb.lmis.cmu.gov.pk",
-	kp: "http://kp.lmis.cmu.gov.pk",
-	sindh: "http://sindh.lmis.cmu.gov.pk",
+	cmu: "http://127.0.0.1:3001",  // Default domain without subdomain
+	ajk: "http://127.0.0.1:3002",
+	ba: "http://127.0.0.1:3003",
+	gb: "http://127.0.0.1:3004",
+	kp: "http://127.0.0.1:3005",
+	sindh: "http://127.0.0.1:3006",
 };
 
 app.use((req, res, next) => {
