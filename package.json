@@ -2,6 +2,7 @@
   "name": "load_balancer",
   "packageManager": "yarn@4.11.0",
   "dependencies": {
+    "cros": "^1.1.0",
     "express": "^5.2.1",
     "http-proxy-middleware": "^3.0.5"
   },

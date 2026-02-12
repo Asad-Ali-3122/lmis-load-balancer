@@ -1,5 +1,12 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+
+app.use(cors({
+	origin: "*",        // Allow all origins
+	methods: "*",       // Allow all HTTP methods
+	allowedHeaders: "*"
+}));
 
 // Map subdomains to target URLs
 const targetMap = {
