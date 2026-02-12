@@ -1,0 +1,12 @@
+{
+  "name": "load_balancer",
+  "packageManager": "yarn@4.11.0",
+  "dependencies": {
+    "express": "^5.2.1",
+    "http-proxy-middleware": "^3.0.5"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  }
+}
