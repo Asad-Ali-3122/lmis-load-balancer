@@ -22,7 +22,7 @@ app.use((req, res) => {
 	// 	return res.status(400).json({ error: "Host header missing" });
 	// }
 
-	console.log(host = req.headers.host);
+	console.log(req.headers.host);
 	// Remove port if present (e.g., localhost:3000)
 	const host = req.headers.host.split(":")[0];
 
