@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 RUN corepack enable && corepack prepare yarn@4.9.1 --activate
 
 # 👇 Make sure .yarnrc.yml is copied along with package files
-COPY package.json yarn.lock .yarnrc.yml ./
+COPY package.json yarn.lock ./
 
 # This will now install using node_modules
 RUN yarn install
