@@ -18,28 +18,19 @@ const targetMap = {
 };
 
 app.use((req, res) => {
-	// if (!req.headers.host) {
-	// 	return res.status(400).json({ error: "Host header missing" });
-	// }
 
-	const origin = req.headers.origin; // <-- the frontend URL
-	console.log("Origin header:", origin);
+	const hostname = req.headers.origin.replace(/^https?:\/\//, ''); // "lmis.cmu.gov.pk"
 
-	console.log(req.headers.host);
+	// Split by dots
+	const parts = hostname.split('.'); // ["lmis", "cmu", "gov", "pk"]
+
+	// The first part is the subdomain
+	const subdomain = parts[0];
+
+	console.log(subdomain);
 	console.log(req.originalUrl);
-	// Remove port if present (e.g., localhost:3000)
-	const host = req.headers.host.split(".")[0];
 
-	const rootDomain = "lmis.cmu.gov.pk";
-	let subdomain = "cmu"; // default
 
-	if (host !== rootDomain && host !== `www.${rootDomain}`) {
-		if (host.endsWith(`.${rootDomain}`)) {
-			subdomain = host.replace(`.${rootDomain}`, "");
-		} else {
-			return res.status(400).json({ error: "Invalid domain" });
-		}
-	}
 
 	if (!targetMap[subdomain]) {
 		return res.status(400).json({ error: `Unsupported subdomain: ${subdomain}` });
