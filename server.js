@@ -22,6 +22,9 @@ app.use((req, res) => {
 	// 	return res.status(400).json({ error: "Host header missing" });
 	// }
 
+	const origin = req.headers.origin; // <-- the frontend URL
+	console.log("Origin header:", origin);
+
 	console.log(req.headers.host);
 	console.log(req.originalUrl);
 	// Remove port if present (e.g., localhost:3000)
