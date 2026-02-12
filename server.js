@@ -42,7 +42,7 @@ app.use((req, res) => {
 
 	const redirectUrl = targetMap[subdomain] + req.originalUrl;
 
-	console.log(`balancer hit: ${redirectUrl}`)
+	console.log(`balancer hit: ${subdomain} to ${redirectUrl}`)
 
 	return res.redirect(302, redirectUrl); // Use 301 in production if needed
 });
