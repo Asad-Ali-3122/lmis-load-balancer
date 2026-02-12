@@ -1,16 +1,15 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 
-app.use(cors({
-	origin: "*",        // Allow all origins
-	methods: "*",       // Allow all HTTP methods
-	allowedHeaders: "*"
-}));
+const app = express();
+
+// Allow all CORS (fully open)
+app.use(cors());
+app.options("*", cors());
 
 // Map subdomains to target URLs
 const targetMap = {
-	cmu: "http://127.0.0.1:3001",  // Default domain without subdomain
+	cmu: "http://127.0.0.1:3001",
 	ajk: "http://127.0.0.1:3002",
 	ba: "http://127.0.0.1:3003",
 	gb: "http://127.0.0.1:3004",
@@ -18,39 +17,36 @@ const targetMap = {
 	sindh: "http://127.0.0.1:3006",
 };
 
-app.use((req, res, next) => {
-	// Extract hostname from request headers
-	const host = req.headers.host; // e.g. ajk.lmis.cmu.gov.pk or lmis.cmu.gov.pk
-
-	if (!host) {
+app.use((req, res) => {
+	if (!req.headers.host) {
 		return res.status(400).json({ error: "Host header missing" });
 	}
 
-	// Extract subdomain - domain is lmis.cmu.gov.pk
-	// Examples:
-	// ajk.lmis.cmu.gov.pk -> subdomain = "ajk"
-	// lmis.cmu.gov.pk -> no subdomain, so default to "cmu"
+	// Remove port if present (e.g., localhost:3000)
+	const host = req.headers.host.split(":")[0];
 
-	// Define your root domain
 	const rootDomain = "lmis.cmu.gov.pk";
+	let subdomain = "cmu"; // default
 
-	let subdomain = null;
+	if (host !== rootDomain && host !== `www.${rootDomain}`) {
+		if (host.endsWith(`.${rootDomain}`)) {
+			subdomain = host.replace(`.${rootDomain}`, "");
+		} else {
+			return res.status(400).json({ error: "Invalid domain" });
+		}
+	}
 
-	if (host === rootDomain || host === `www.${rootDomain}`) subdomain = "cmu";
-	else if (host.endsWith(`.${rootDomain}`)) subdomain = host.slice(0, host.length - rootDomain.length - 1);
+	if (!targetMap[subdomain]) {
+		return res.status(400).json({ error: `Unsupported subdomain: ${subdomain}` });
+	}
 
-	if (!subdomain || !targetMap[subdomain]) return res.status(400).json({ error: `Invalid or unsupported subdomain: ${subdomain}` });
+	const redirectUrl = targetMap[subdomain] + req.originalUrl;
 
-	// Construct the redirect URL
-	let redirectUrl = targetMap[subdomain];
-
-	// Add the original path and query string to the redirect
-	if (req.url && req.url !== '/') redirectUrl += req.url;
-
-	// Perform 301 (permanent) redirect
-	return res.redirect(301, redirectUrl);
+	return res.redirect(302, redirectUrl); // Use 301 in production if needed
 });
 
-app.listen(3000, () => {
-	console.log("Gateway running on port 3000 - Redirecting based on subdomains");
+const PORT = 3000;
+
+app.listen(PORT, () => {
+	console.log(`Gateway running on port ${PORT}`);
 });

@@ -1,13 +1,14 @@
 {
-  "name": "load_balancer",
-  "packageManager": "yarn@4.11.0",
-  "dependencies": {
-    "cros": "^1.1.0",
-    "express": "^5.2.1",
-    "http-proxy-middleware": "^3.0.5"
-  },
+  "name": "lmis-load-balancer",
+  "version": "1.0.0",
+  "description": "Subdomain-based redirect gateway",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }
