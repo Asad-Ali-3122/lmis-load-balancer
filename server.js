@@ -9,7 +9,7 @@ app.options("*", cors());
 
 // Map subdomains to target URLs
 const targetMap = {
-	cmu: "http://127.0.0.1:3001",
+	lmis: "http://127.0.0.1:3001",
 	ajk: "http://127.0.0.1:3002",
 	ba: "http://127.0.0.1:3003",
 	gb: "http://127.0.0.1:3004",
@@ -22,23 +22,15 @@ app.use((req, res) => {
 	// 	return res.status(400).json({ error: "Host header missing" });
 	// }
 
-	console.log(req.headers.host);
+	console.log(req.headers.host.split(".")[0]);
+	console.log(req.originalUrl);
 	// Remove port if present (e.g., localhost:3000)
-	const host = req.headers.host.split(":")[0];
+	const host = req.headers.host.split(".")[0];
 
-	const rootDomain = "lmis.cmu.gov.pk";
-	let subdomain = "cmu"; // default
 
-	if (host !== rootDomain && host !== `www.${rootDomain}`) {
-		if (host.endsWith(`.${rootDomain}`)) {
-			subdomain = host.replace(`.${rootDomain}`, "");
-		} else {
-			return res.status(400).json({ error: "Invalid domain" });
-		}
-	}
 
-	if (!targetMap[subdomain]) {
-		return res.status(400).json({ error: `Unsupported subdomain: ${subdomain}` });
+	if (!targetMap[host]) {
+		return res.status(400).json({ error: `Unsupported subdomain: ${host}` });
 	}
 
 	const redirectUrl = targetMap[subdomain] + req.originalUrl;
