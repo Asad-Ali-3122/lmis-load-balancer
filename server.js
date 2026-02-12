@@ -22,15 +22,24 @@ app.use((req, res) => {
 	// 	return res.status(400).json({ error: "Host header missing" });
 	// }
 
-	console.log(req.headers.host.split(".")[0]);
+	console.log(req.headers.host);
 	console.log(req.originalUrl);
 	// Remove port if present (e.g., localhost:3000)
 	const host = req.headers.host.split(".")[0];
 
+	const rootDomain = "lmis.cmu.gov.pk";
+	let subdomain = "cmu"; // default
 
+	if (host !== rootDomain && host !== `www.${rootDomain}`) {
+		if (host.endsWith(`.${rootDomain}`)) {
+			subdomain = host.replace(`.${rootDomain}`, "");
+		} else {
+			return res.status(400).json({ error: "Invalid domain" });
+		}
+	}
 
-	if (!targetMap[host]) {
-		return res.status(400).json({ error: `Unsupported subdomain: ${host}` });
+	if (!targetMap[subdomain]) {
+		return res.status(400).json({ error: `Unsupported subdomain: ${subdomain}` });
 	}
 
 	const redirectUrl = targetMap[subdomain] + req.originalUrl;
